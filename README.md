@@ -24,13 +24,11 @@ An AI-powered Streamlit app that matches your resume against any job description
 
 ---
 
-## 📁 Project Structure
-
-resume-skill-gap-analyzer/
-├── app.py # Streamlit UI: upload, JD input, results dashboard, gauges
-├── logic.py # PDF extraction, skill matching, scoring, Gemini recommendations
-├── skills.py # SKILL_TAXONOMY: canonical skills mapped to their aliases
-└── train.py # Fine-tunes the Cross-Encoder on resume/JD fit dataset
+📁 Project Structure
+app.py — Streamlit UI: upload, JD input, results dashboard, gauges
+logic.py — PDF extraction, skill matching, scoring, Gemini recommendations
+skills.py — SKILL_TAXONOMY: canonical skills mapped to their aliases
+train.py — Fine-tunes the Cross-Encoder on resume/JD fit dataset
 
 ---
 
@@ -60,10 +58,6 @@ cd resume-skill-gap-analyzer
 ```
 
 2. **Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
 
 3. **Configure your Gemini API Key:**
 
