@@ -24,14 +24,6 @@ An AI-powered Streamlit app that matches your resume against any job description
 
 ---
 
-📁 Project Structure
-app.py — Streamlit UI: upload, JD input, results dashboard, gauges
-logic.py — PDF extraction, skill matching, scoring, Gemini recommendations
-skills.py — SKILL_TAXONOMY: canonical skills mapped to their aliases
-train.py — Fine-tunes the Cross-Encoder on resume/JD fit dataset
-
----
-
 ## 📦 Requirements
 
 ```text
