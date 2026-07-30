@@ -1,73 +1,90 @@
-# 🧠 Resume Skill Gap Analyzer
+# 🧠 SkillSync AI
 
-An AI-powered Streamlit app that matches your resume against any job description in seconds. It combines a deterministic skill-taxonomy matcher with a fine-tuned Cross-Encoder for semantic similarity, then uses Google Gemini to turn the gaps into concrete, actionable career advice.
-
----
-
-## ✨ Key Features
-
-* 📄 **PDF Resume Parsing:** Extracts clean text from uploaded PDF resumes using `pdfplumber`.
-* 🎯 **Taxonomy-Based Skill Extraction:** Matches resume and JD text against a curated taxonomy (`skills.py`) spanning Programming Languages, Databases, ML/DL, NLP & LLM tooling, Cloud/MLOps, Web Frameworks, and Soft Skills — using word-boundary safe regex so partial-word false positives (e.g. "js" inside another word) are avoided.
-* 🤖 **Fine-Tuned Cross-Encoder Semantic Score:** Loads a custom fine-tuned Cross-Encoder (`./finetuned_cross_encoder`) if available, falling back to `cross-encoder/stsb-distilroberta-base` otherwise, to score deep semantic fit beyond keyword overlap.
-* ⚖️ **Weighted Final Score:** Blends Exact Skill Match (50%) and AI Semantic Score (50%) into one final compatibility percentage.
-* 💡 **Gemini-Powered Career Coaching:** Sends the resume + JD to `gemini-2.0-flash` and returns 5 specific, actionable recommendations — missing-skill learning paths, a portfolio project idea, domain gaps, and ATS keyword fixes.
-* 📊 **Interactive Visual Dashboard:** Plotly gauge charts for Overall, Exact, and Semantic scores, plus tabbed breakdowns of Matched ✅, Missing ❌, and Extra ⭐ skills.
+An AI-powered Streamlit application that matches resumes against job descriptions using a hybrid approach combining deterministic skill matching, a fine-tuned Cross-Encoder, and Groq's **Llama 3.3 70B** to generate actionable insights for both job seekers and recruiters.
 
 ---
 
-## 🛠️ Architecture & Technical Decisions
+## 📖 Overview
 
-* **Taxonomy Matching over NER:** Skill extraction (`logic.py`) pre-compiles word-boundary-safe regex patterns for every alias in `SKILL_TAXONOMY` at startup, rather than relying on a trained NER model. This is deterministic, fast, and avoids false positives like matching "R" inside "Server."
-* **Hybrid Scoring:** Exact taxonomy overlap and Cross-Encoder semantic similarity are combined 50/50 in `compute_match_score()`, balancing hard keyword requirements with contextual fit.
-* **Custom Fine-Tuning Pipeline:** `train.py` fine-tunes `cross-encoder/stsb-roberta-base` on the [`cnamuangtoun/resume-job-description-fit`](https://huggingface.co/datasets/cnamuangtoun/resume-job-description-fit) dataset using `sentence-transformers`, with a binary classification evaluator, and saves the result to `./finetuned_cross_encoder` for `logic.py` to auto-load.
-* **Cached Resources:** The Sentence-Transformer/Cross-Encoder model and NLTK downloads are wrapped in `@st.cache_resource` so they load only once per session.
+SkillSync AI offers two modes:
 
----
+### 👤 Job Seeker Mode
+- Upload a resume and paste a job description.
+- Get a compatibility score, matched/missing/extra skills, and AI-powered career recommendations.
 
-## 📦 Requirements
+### 🏢 Recruiter Mode
+- Upload up to **25 resumes** against a single job description.
+- Receive ranked candidates, aggregate skill-gap analysis, AI hiring summaries, and a downloadable PDF report.
 
-```text
-streamlit
-sentence-transformers
-pdfplumber
-google-generativeai
-plotly
-nltk
-torch
-datasets
-numpy
-```
+Both modes use the same hybrid scoring engine for consistent evaluation.
 
 ---
 
-## 🚀 Installation & Setup
+## ✨ Features
 
-1. **Clone the repository:**
+- 📄 **PDF Resume Parsing** using **pdfplumber**.
+- 🎯 **Taxonomy-Based Skill Extraction** with regex-based matching across Programming, ML/DL, NLP, Cloud, Databases, Web, and Soft Skills.
+- 🤖 **Fine-Tuned Cross-Encoder** with automatic fallback to `cross-encoder/stsb-distilroberta-base`.
+- 📊 **Hybrid Scoring:** 50% Exact Skill Match + 50% Semantic Similarity.
+- 📁 **Batch Resume Screening** with candidate ranking and progress tracking.
+- 📈 **Aggregate Skill Gap Analysis** across all candidates.
+- 🧠 **Groq Llama 3.3 70B** for career recommendations and recruiter summaries.
+- 📑 **PDF Screening Report** generation.
+- 📉 **Interactive Plotly Dashboard** with gauges and skill breakdowns.
+
+---
+
+## 🏗️ Architecture
+
+- **Deterministic Skill Matching:** Uses a curated skill taxonomy with word-boundary-safe regex instead of NER for faster, more reliable extraction.
+- **Hybrid Matching Engine:** Combines exact skill overlap with semantic similarity using a fine-tuned Cross-Encoder.
+- **Custom Fine-Tuning:** `train.py` fine-tunes `cross-encoder/stsb-roberta-base` on the `cnamuangtoun/resume-job-description-fit` dataset and saves the model to `./finetuned_cross_encoder`.
+- **Optimized Performance:** Batch processing, cached models (`@st.cache_resource`), and fault-tolerant PDF generation.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Streamlit, Plotly
+- **NLP & ML:** PyTorch, Sentence-Transformers, NLTK, pdfplumber
+- **LLM:** Groq API (Llama 3.3 70B)
+- **PDF:** fpdf2
+- **Language:** Python 3.10+
+
+---
+
+## ⚙️ Installation
+
+### Clone the repository
 
 ```bash
 git clone https://github.com/Ali-Muhammad24/resume-skill-gap-analyzer.git
-cd resume-skill-gap-analyzer
+cd skillsync-ai
 ```
 
-2. **Install dependencies:**
+### Install dependencies
 
-3. **Configure your Gemini API Key:**
+```bash
+pip install -r requirements.txt
+```
 
-Create a `.streamlit/secrets.toml` file in the project root:
+### Configure Groq API
+
+Create `.streamlit/secrets.toml`:
 
 ```toml
-GEMINI_API_KEY = "your_google_gemini_api_key_here"
+GROQ_API_KEY = "your_groq_api_key_here"
 ```
 
-4. **(Optional) Fine-tune the Cross-Encoder:**
+### (Optional) Fine-Tune the Model
 
 ```bash
 python train.py
 ```
 
-This trains on the `cnamuangtoun/resume-job-description-fit` dataset and saves the model to `./finetuned_cross_encoder`. If skipped, the app automatically falls back to the pre-trained `cross-encoder/stsb-distilroberta-base` model.
+If skipped, the app automatically uses the pre-trained `cross-encoder/stsb-distilroberta-base` model.
 
-5. **Run the app:**
+### Run the application
 
 ```bash
 streamlit run app.py
@@ -75,21 +92,30 @@ streamlit run app.py
 
 ---
 
-## 🧭 How It Works
+## ⚙️ Workflow
 
-1. Upload a PDF resume and paste a job description (min. 50 characters).
-2. `extract_text_from_pdf()` pulls raw text from the PDF.
-3. `extract_skills()` scans both texts against the taxonomy to find matched, missing, and extra skills.
-4. The Cross-Encoder scores semantic similarity between resume and JD.
-5. `compute_match_score()` combines both into exact, semantic, and final scores.
-6. If a `GEMINI_API_KEY` is present, Gemini generates 5 tailored recommendations.
-7. Results render as gauges, metrics, and skill-breakdown tabs.
+### 👤 Job Seeker
+1. Upload resume and paste a job description.
+2. Extract text and identify matched, missing, and extra skills.
+3. Compute exact and semantic scores.
+4. Generate AI-powered career recommendations.
+5. Display results through charts and skill panels.
+
+### 🏢 Recruiter
+1. Upload a job description and multiple resumes.
+2. Rank candidates using the hybrid scoring engine.
+3. Identify common skill gaps.
+4. Generate AI hiring summaries.
+5. Export a PDF screening report.
 
 ---
 
-## 💻 Tech Stack
+## 📁 Project Structure
 
-* **Frontend & UI:** Streamlit, Plotly
-* **NLP & ML:** PyTorch, Sentence-Transformers (Cross-Encoder), NLTK, pdfplumber
-* **LLM Integration:** Google Gemini 2.0 Flash API
-* **Language:** Python 3.10+
+```text
+├── app.py           # Streamlit interface
+├── logic.py         # Matching engine & AI integration
+├── skills.py        # Skill taxonomy
+├── train.py         # Cross-Encoder fine-tuning
+└── requirements.txt
+```
