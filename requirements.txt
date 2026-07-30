@@ -1,0 +1,11 @@
+streamlit
+pandas
+plotly
+pdfplumber
+sentence-transformers
+groq
+fpdf2
+nltk
+torch
+datasets
+numpy
