@@ -23,13 +23,13 @@ from fpdf.enums import XPos, YPos
 # Skills DB from skills.py
 from skills import SKILL_TAXONOMY
 
-# Model Loading (from train.py) with fallback to pre-trained base
-CROSS_ENCODER_PATH = "./finetuned_cross_encoder"
+# Load fine-tuned Cross-Encoder from Hugging Face with fallback to the pre-trained base model
+HF_MODEL_REPO = "alimuhammad24/resume-jd-cross-encoder"
 FALLBACK_CROSS_ENCODER = "cross-encoder/stsb-distilroberta-base"
 
-if os.path.exists(CROSS_ENCODER_PATH):
-    cross_model = CrossEncoder(CROSS_ENCODER_PATH)
-else:
+try:
+    cross_model = CrossEncoder(HF_MODEL_REPO)
+except Exception:
     cross_model = CrossEncoder(FALLBACK_CROSS_ENCODER)
 
 # Pre-compiles word-boundary safe regex patterns for fast skill matching at startup.
