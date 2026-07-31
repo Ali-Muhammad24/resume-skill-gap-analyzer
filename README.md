@@ -24,7 +24,7 @@ Both modes use the same hybrid scoring engine for consistent evaluation.
 
 - 📄 **PDF Resume Parsing** using **pdfplumber**.
 - 🎯 **Taxonomy-Based Skill Extraction** with regex-based matching across Programming, ML/DL, NLP, Cloud, Databases, Web, and Soft Skills.
-- 🤖 **Fine-Tuned Cross-Encoder** with automatic fallback to `cross-encoder/stsb-distilroberta-base`.
+- 🤖 **Fine-Tuned Cross-Encoder**, hosted on Hugging Face Hub, with automatic fallback to `cross-encoder/stsb-distilroberta-base`.
 - 📊 **Hybrid Scoring:** 50% Exact Skill Match + 50% Semantic Similarity.
 - 📁 **Batch Resume Screening** with candidate ranking and progress tracking.
 - 📈 **Aggregate Skill Gap Analysis** across all candidates.
@@ -38,7 +38,8 @@ Both modes use the same hybrid scoring engine for consistent evaluation.
 
 - **Deterministic Skill Matching:** Uses a curated skill taxonomy with word-boundary-safe regex instead of NER for faster, more reliable extraction.
 - **Hybrid Matching Engine:** Combines exact skill overlap with semantic similarity using a fine-tuned Cross-Encoder.
-- **Custom Fine-Tuning:** `train.py` fine-tunes `cross-encoder/stsb-roberta-base` on the `cnamuangtoun/resume-job-description-fit` dataset and saves the model to `./finetuned_cross_encoder`.
+- **Custom Fine-Tuning:** `train.py` fine-tunes `cross-encoder/stsb-roberta-base` on the `cnamuangtoun/resume-job-description-fit` dataset.
+- **Model Hosting:** The fine-tuned Cross-Encoder is published on Hugging Face Hub and loaded directly at runtime via its repo ID—no large model files are stored in this repository. If the Hub load fails for any reason, the app automatically falls back to the pre-trained `cross-encoder/stsb-distilroberta-base` model, so the app never breaks.
 - **Optimized Performance:** Batch processing, cached models (`@st.cache_resource`), and fault-tolerant PDF generation.
 
 ---
@@ -48,6 +49,7 @@ Both modes use the same hybrid scoring engine for consistent evaluation.
 - **Frontend:** Streamlit, Plotly
 - **NLP & ML:** PyTorch, Sentence-Transformers, NLTK, pdfplumber
 - **LLM:** Groq API (Llama 3.3 70B)
+- **Model Hosting:** Hugging Face Hub
 - **PDF:** fpdf2
 - **Language:** Python 3.10+
 
@@ -82,7 +84,7 @@ GROQ_API_KEY = "your_groq_api_key_here"
 python train.py
 ```
 
-If skipped, the app automatically uses the pre-trained `cross-encoder/stsb-distilroberta-base` model.
+> **Note:** The deployed app loads the fine-tuned Cross-Encoder directly from Hugging Face Hub at runtime—running `train.py` locally is **not required** to use the app. It's only needed if you want to reproduce the fine-tuning yourself or experiment with improving the model. If the Hub model can't be reached, the app automatically falls back to the pre-trained `cross-encoder/stsb-distilroberta-base` model.
 
 ### Run the application
 
@@ -95,6 +97,7 @@ streamlit run app.py
 ## ⚙️ Workflow
 
 ### 👤 Job Seeker
+
 1. Upload resume and paste a job description.
 2. Extract text and identify matched, missing, and extra skills.
 3. Compute exact and semantic scores.
@@ -102,6 +105,7 @@ streamlit run app.py
 5. Display results through charts and skill panels.
 
 ### 🏢 Recruiter
+
 1. Upload a job description and multiple resumes.
 2. Rank candidates using the hybrid scoring engine.
 3. Identify common skill gaps.
@@ -116,6 +120,14 @@ streamlit run app.py
 ├── app.py           # Streamlit interface
 ├── logic.py         # Matching engine & AI integration
 ├── skills.py        # Skill taxonomy
-├── train.py         # Cross-Encoder fine-tuning
+├── train.py         # Cross-Encoder fine-tuning (optional, for reproducing the HF-hosted model)
 └── requirements.txt
 ```
+
+---
+
+## 🤗 Model
+
+The fine-tuned Cross-Encoder used in production is publicly available on Hugging Face Hub:
+
+**alimuhammad24/resume-jd-cross-encoder**
