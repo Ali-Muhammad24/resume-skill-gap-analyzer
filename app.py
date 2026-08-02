@@ -23,29 +23,44 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Theme
-BG = "#121315"
-SURFACE = "#1c1d20"
-BORDER = "#333438"
-PRIMARY = "#f97316"
-PRIMARY_LIGHT = "#fb923c"
-TEXT = "#f2f2f0"
-TEXT_MUTED = "#9a9a9e"
-SUCCESS = "#34d399"
-WARNING = "#fbbf24"
-DANGER = "#f87171"
+# Theme Palette
+BG = "#F8FAFC"
+SECONDARY_BG = "#F1F5F9"
+SURFACE = "#FFFFFF"
 
+PRIMARY = "#5B7DB1"
+PRIMARY_HOVER = "#4E6F9D"
+PRIMARY_ACTIVE = "#45658F"
+LIGHT_ACCENT = "#EAF1F8"
+
+TEXT = "#1F2937"
+TEXT_SECONDARY = "#6B7280"
+TEXT_MUTED = "#9CA3AF"
+
+BORDER = "#A9BFDA"
+BORDER_LIGHT = "#DCE5F0"
+
+SUCCESS = "#4CAF7D"
+WARNING = "#D4A017"
+DANGER = "#D95D5D"
+
+PILL_GREEN_BG, PILL_GREEN_TEXT = "#DCFCE7", "#15803D"
+PILL_RED_BG, PILL_RED_TEXT = "#FEE2E2", "#B91C1C"
+PILL_BLUE_BG, PILL_BLUE_TEXT = "#DBEAFE", "#1D4ED8"
+
+#Styling
 CUSTOM_CSS = f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 html, body, [class*="css"] {{
     font-family: 'Inter', sans-serif;
+    color: {TEXT};
 }}
 
 /* App background */
 .stApp {{
-    background: radial-gradient(circle at 15% 0%, #24201c 0%, {BG} 45%);
+    background: {BG};
     color: {TEXT};
 }}
 
@@ -73,11 +88,11 @@ div[data-testid="stToolbar"] {{display: none;}}
     line-height: 1.2;
 }}
 .app-title span {{
-    color: {PRIMARY_LIGHT};
+    color: {PRIMARY};
 }}
 .app-subtitle {{
     font-size: 0.95rem;
-    color: {TEXT_MUTED};
+    color: {TEXT_SECONDARY};
     margin-top: 0.35rem;
 }}
 
@@ -87,26 +102,28 @@ div[data-testid="stToolbar"] {{display: none;}}
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: {PRIMARY_LIGHT};
+    color: {PRIMARY};
     margin-bottom: 0.6rem;
 }}
 
 /* Bordered containers -> cards */
-div[data-testid="stVerticalBlockBorderWrapper"] {{
-    background: {SURFACE};
-    border: 1px solid {BORDER} !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+div[data-testid="stVerticalBlockBorderWrapper"],
+div[data-testid="stVerticalBlockBorderWrapper"] > div,
+div[data-testid="stBorderWrapper"] {{
+    background: {SURFACE} !important;
+    border: 1.5px solid {BORDER} !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
     padding: 0.25rem;
 }}
 
 /* Tabs */
 button[data-baseweb="tab"] {{
     font-weight: 600;
-    color: {TEXT_MUTED};
+    color: {TEXT_SECONDARY};
 }}
 button[data-baseweb="tab"][aria-selected="true"] {{
-    color: {PRIMARY_LIGHT};
+    color: {PRIMARY};
 }}
 div[data-baseweb="tab-highlight"] {{
     background-color: {PRIMARY} !important;
@@ -116,40 +133,54 @@ div[data-baseweb="tab-border"] {{
 }}
 
 /* Buttons */
+div[data-testid="stButton"] button,
+div[data-testid="stButton"] button p,
+div[data-testid="stButton"] button span,
+div[data-testid="stButton"] button div {{
+    color: #FFFFFF !important;
+}}
 div[data-testid="stButton"] button {{
-    background: linear-gradient(135deg, {PRIMARY} 0%, #6d28d9 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
+    background: {PRIMARY} !important;
+    border: none !important;
+    border-radius: 8px;
     font-weight: 600;
     padding: 0.55rem 1.2rem;
-    transition: filter 0.15s ease;
+    transition: background-color 0.15s ease;
 }}
 div[data-testid="stButton"] button:hover {{
-    filter: brightness(1.12);
-    color: white;
+    background: {PRIMARY_HOVER} !important;
 }}
+div[data-testid="stButton"] button:active,
+div[data-testid="stButton"] button:focus,
+div[data-testid="stButton"] button:focus:not(:active) {{
+    background: {PRIMARY_ACTIVE} !important;
+    border-color: {PRIMARY_ACTIVE} !important;
+    box-shadow: none !important;
+}}
+
 div[data-testid="stDownloadButton"] button {{
     background: {SURFACE};
     color: {TEXT};
-    border: 1px solid {PRIMARY};
-    border-radius: 10px;
+    border: 1px solid {BORDER};
+    border-radius: 8px;
     font-weight: 600;
+    transition: all 0.15s ease;
 }}
 div[data-testid="stDownloadButton"] button:hover {{
-    border-color: {PRIMARY_LIGHT};
-    color: {PRIMARY_LIGHT};
+    border-color: {PRIMARY};
+    color: {PRIMARY};
+    background: {LIGHT_ACCENT};
 }}
 
 /* Metrics */
 div[data-testid="stMetric"] {{
-    background: rgba(139, 92, 246, 0.07);
-    border: 1px solid {BORDER};
-    border-radius: 12px;
+    background: {LIGHT_ACCENT};
+    border: 1px solid {BORDER_LIGHT};
+    border-radius: 10px;
     padding: 0.9rem 1rem;
 }}
 div[data-testid="stMetricLabel"] {{
-    color: {TEXT_MUTED};
+    color: {TEXT_SECONDARY};
 }}
 div[data-testid="stMetricValue"] {{
     color: {TEXT};
@@ -157,27 +188,55 @@ div[data-testid="stMetricValue"] {{
 
 /* Text areas / file uploader */
 textarea, div[data-testid="stFileUploaderDropzone"] {{
-    background: #0f0d18 !important;
-    border-radius: 10px !important;
+    background: {SECONDARY_BG} !important;
+    border-radius: 8px !important;
     border: 1px solid {BORDER} !important;
     color: {TEXT} !important;
+}}
+textarea::placeholder, input::placeholder, ::placeholder {{
+    color: {TEXT_SECONDARY} !important;
+    opacity: 1 !important;
+}}
+textarea:focus, div[data-testid="stFileUploaderDropzone"]:hover {{
+    border-color: {PRIMARY} !important;
+}}
+
+/* Dropdowns */
+div[data-baseweb="select"] > div {{
+    background: {SECONDARY_BG} !important;
+    border-color: {BORDER} !important;
+    color: {TEXT} !important;
+    border-radius: 8px !important;
 }}
 
 /* Progress bar */
 div[data-testid="stProgress"] > div > div {{
-    background: linear-gradient(90deg, {PRIMARY} 0%, {PRIMARY_LIGHT} 100%);
+    background: {PRIMARY};
 }}
 
 /* Dataframe */
 div[data-testid="stDataFrame"] {{
     border: 1px solid {BORDER};
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
 }}
 
 /* Alerts */
 div[data-testid="stAlert"] {{
-    border-radius: 10px;
+    background-color: {LIGHT_ACCENT} !important;
+    border: 1px solid {BORDER} !important;
+    border-radius: 8px !important;
+    color: {TEXT} !important;
+}}
+div[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+div[data-testid="stAlert"] p,
+div[data-testid="stAlert"] span,
+div[data-testid="stAlert"] div {{
+    color: {TEXT} !important;
+}}
+div[data-testid="stAlert"] svg {{
+    color: {PRIMARY} !important;
+    fill: {PRIMARY} !important;
 }}
 
 hr {{
@@ -205,50 +264,92 @@ def load_model():
 
 download_nltk_data()
 
-# Gauge Chart
-def plot_gauge(score, title):
+# Score color helper
+def get_score_color(score):
     if score < 40:
-        color = DANGER
+        return DANGER
     elif score < 70:
-        color = WARNING
+        return WARNING
     else:
-        color = SUCCESS
+        return SUCCESS
 
-    fig = go.Figure(
-        go.Indicator(
-            mode="gauge+number",
-            value=score,
-            title={"text": title, "font": {"size": 13, "color": TEXT_MUTED}},
-            number={"suffix": "%", "font": {"size": 26, "color": color}},
-            gauge={
-                "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": BORDER},
-                "bar": {"color": color},
-                "bgcolor": SURFACE,
-                "borderwidth": 1,
-                "bordercolor": BORDER,
-                "steps": [
-                    {"range": [0, 40], "color": "#232324"},
-                    {"range": [40, 70], "color": "#252220"},
-                    {"range": [70, 100], "color": "#1f2420"},
-                ],
-                "threshold": {
-                    "line": {"color": color, "width": 3},
-                    "thickness": 0.8,
-                    "value": score,
-                },
-            },
+# Combined Score Comparison Chart (concentric radial gauge / donut rings)
+def plot_score_comparison(overall, exact, semantic):
+    # (label, value, domain padding, hole size)
+    rings = [
+        ("Overall Match", overall, 0.00, 0.82),
+        ("Exact Skill Match", exact, 0.12, 0.763),
+        ("AI Semantic Score", semantic, 0.24, 0.654),
+    ]
+
+    fig = go.Figure()
+    for label, value, pad, hole in rings:
+        color = get_score_color(value)
+        fig.add_trace(
+            go.Pie(
+                values=[value, 100 - value],
+                labels=[label, ""],
+                hole=hole,
+                domain=dict(x=[pad, 1 - pad], y=[pad, 1 - pad]),
+                marker=dict(colors=[color, BORDER_LIGHT], line=dict(color="#FFFFFF", width=2)),
+                direction="clockwise",
+                rotation=0,
+                sort=False,
+                textinfo="none",
+                hoverinfo="skip",
+                showlegend=False,
+            )
         )
-    )
+
     fig.update_layout(
-        height=200,
-        margin=dict(t=35, b=10, l=25, r=25),
+        height=240,
+        margin=dict(t=10, b=10, l=10, r=10),
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color=TEXT, family="Inter"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        annotations=[
+            dict(
+                text=f"<b>{overall}%</b>",
+                x=0.5, y=0.5,
+                font=dict(size=18, color=TEXT, family="Inter"),
+                showarrow=False,
+            )
+        ],
+        font=dict(family="Inter", color=TEXT),
     )
     return fig
 
 def card_title(text):
     st.markdown(f'<div class="section-label">{text}</div>', unsafe_allow_html=True)
+
+def render_skill_pills(skills, bg, color):
+    pills = "".join(
+        f'<span style="background:{bg};color:{color};padding:0.35rem 0.9rem;'
+        f'border-radius:999px;font-size:0.85rem;font-weight:600;margin:0.25rem;'
+        f'display:inline-block;">{s}</span>'
+        for s in skills
+    )
+    st.markdown(pills, unsafe_allow_html=True)
+
+def render_ranked_list(valid_results):
+    rows = []
+    for i, r in enumerate(valid_results, 1):
+        score = r["final_score"]
+        color = get_score_color(score)
+        initials = r["filename"][:2].upper()
+        rank_style = f"background:{PRIMARY};color:#FFFFFF;" if i == 1 else f"background:transparent;color:{TEXT_SECONDARY};"
+        rows.append(
+            f'<div style="display:flex;align-items:center;padding:0.85rem 0.4rem;border-bottom:1px solid {BORDER_LIGHT};gap:1rem;">'
+            f'<div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;{rank_style}">{i}</div>'
+            f'<div style="width:34px;height:34px;border-radius:50%;background:{LIGHT_ACCENT};color:{PRIMARY};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">{initials}</div>'
+            f'<div style="flex:1;min-width:0;">'
+            f'<div style="font-weight:600;color:{TEXT};margin-bottom:0.35rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{r["filename"]}</div>'
+            f'<div style="background:{BORDER_LIGHT};border-radius:999px;height:6px;width:100%;overflow:hidden;">'
+            f'<div style="background:{color};height:100%;width:{score}%;border-radius:999px;"></div>'
+            f'</div></div>'
+            f'<div style="font-weight:700;color:{color};min-width:60px;text-align:right;">{score}%</div>'
+            f'</div>'
+        )
+    st.markdown(f'<div style="max-height:325px;overflow-y:auto;">{"".join(rows)}</div>', unsafe_allow_html=True)
 
 # Job Seeker Mode
 def render_job_seeker_mode():
@@ -263,24 +364,18 @@ def render_job_seeker_mode():
                 help="Only PDF format is supported.",
                 label_visibility="collapsed",
             )
-            if uploaded_resume:
-                st.success(f"Uploaded: **{uploaded_resume.name}**")
 
         with col_right:
             card_title("Job Description")
             job_description = st.text_area(
                 "Job description",
-                height=160,
+                height=130,
                 placeholder="Paste the full job description here...",
                 label_visibility="collapsed",
             )
-            jd_word_count = len(job_description.split()) if job_description.strip() else 0
-            st.caption(f"Word count: {jd_word_count}")
 
         st.write("")
-        _, btn_col, _ = st.columns([1, 2, 1])
-        with btn_col:
-            analyze_clicked = st.button("Analyze Resume", use_container_width=True)
+        analyze_clicked = st.button("Analyze Resume", use_container_width=True)
 
     if not analyze_clicked:
         st.write("")
@@ -309,56 +404,68 @@ def render_job_seeker_mode():
     st.write("")
     with st.container(border=True):
         card_title("Results")
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Overall Match", f"{results['final_score']}%")
-        m2.metric("Skills Matched", results["matched_count"])
-        m3.metric("Skills Missing", results["missing_count"])
-        m4.metric("Bonus Skills", len(results["extra_skills"]))
+        col_left, col_right = st.columns(2, gap="large")
 
-        st.write("")
-        gc1, gc2, gc3 = st.columns(3)
-        with gc1:
-            st.plotly_chart(
-                plot_gauge(results["final_score"], "Overall Match"),
-                use_container_width=True, config={"displayModeBar": False},
-            )
-        with gc2:
-            st.plotly_chart(
-                plot_gauge(results["exact_score"], "Exact Skill Match"),
-                use_container_width=True, config={"displayModeBar": False},
-            )
-        with gc3:
-            st.plotly_chart(
-                plot_gauge(results["semantic_score"], "AI Semantic Score"),
-                use_container_width=True, config={"displayModeBar": False},
-            )
+        with col_left:
+            card_title("Skill Breakdown")
+            tab1, tab2, tab3 = st.tabs(["Matched", "Missing", "Extra"])
 
-    st.write("")
-    with st.container(border=True):
-        card_title("Skill Breakdown")
-        tab1, tab2, tab3 = st.tabs(["Matched", "Missing", "Extra"])
+            with tab1:
+                if results["matching_skills"]:
+                    render_skill_pills(results["matching_skills"], PILL_GREEN_BG, PILL_GREEN_TEXT)
+                    st.caption(f"{results['matched_count']} JD skills found in your resume.")
+                else:
+                    st.warning("No skill overlaps detected. Try expanding your skills section in the resume.")
 
-        with tab1:
-            if results["matching_skills"]:
-                st.write(" · ".join(results["matching_skills"]))
-                st.progress(min(results["matched_count"] / max(results["total_jd_skills"], 1), 1.0))
-                st.caption(f"{results['matched_count']} JD skills found in your resume")
-            else:
-                st.warning("No skill overlaps detected. Try expanding your skills section in the resume.")
+            with tab2:
+                if results["missing_skills"]:
+                    render_skill_pills(results["missing_skills"], PILL_RED_BG, PILL_RED_TEXT)
+                    st.caption(f"{results['missing_count']} skills required by the JD but not found in your resume.")
+                else:
+                    st.success("You have all the skills mentioned in the job description!")
 
-        with tab2:
-            if results["missing_skills"]:
-                st.write(" · ".join(results["missing_skills"]))
-                st.caption("These skills are required by the JD but not found in your resume.")
-            else:
-                st.success("You have all the skills mentioned in the job description!")
+            with tab3:
+                if results["extra_skills"]:
+                    render_skill_pills(results["extra_skills"], PILL_BLUE_BG, PILL_BLUE_TEXT)
+                    st.caption(f"{len(results['extra_skills'])} extra skills found beyond what the JD requires.")
+                else:
+                    st.info("No extra skills beyond the JD requirements detected.")
 
-        with tab3:
-            if results["extra_skills"]:
-                st.write(" · ".join(results["extra_skills"]))
-                st.caption("Skills you have beyond what the JD requires — great for standing out.")
-            else:
-                st.info("No extra skills beyond the JD requirements detected.")
+        with col_right:
+            card_title("Match Score")
+            chart_col, legend_col = st.columns([2.2, 1], gap="small")
+
+            with chart_col:
+                st.plotly_chart(
+                    plot_score_comparison(
+                        results["final_score"], results["exact_score"], results["semantic_score"]
+                    ),
+                    use_container_width=True, config={"displayModeBar": False},
+                )
+
+            with legend_col:
+                st.markdown(
+                    f"""
+                    <div style="display:flex; flex-direction:column; justify-content:center; height:260px; gap:1.4rem;">
+                        <div style="text-align:center;">
+                            <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(results['final_score'])};margin:0 auto 4px;"></div>
+                            <div style="font-size:0.72rem;color:{TEXT_MUTED};">Overall</div>
+                            <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{results['final_score']}%</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(results['exact_score'])};margin:0 auto 4px;"></div>
+                            <div style="font-size:0.72rem;color:{TEXT_MUTED};">Exact</div>
+                            <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{results['exact_score']}%</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(results['semantic_score'])};margin:0 auto 4px;"></div>
+                            <div style="font-size:0.72rem;color:{TEXT_MUTED};">Semantic</div>
+                            <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{results['semantic_score']}%</div>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
     st.write("")
     with st.container(border=True):
@@ -382,8 +489,6 @@ def render_recruiter_mode():
             placeholder="Paste the job description you're screening candidates against...",
             label_visibility="collapsed",
         )
-        jd_word_count = len(jd_text.split()) if jd_text.strip() else 0
-        st.caption(f"Word count: {jd_word_count}")
 
         st.write("")
         card_title("Candidate Resumes")
@@ -400,13 +505,9 @@ def render_recruiter_mode():
                     f"You uploaded {len(resume_files)} resumes, but this app screens a maximum of "
                     f"{MAX_BATCH_SIZE} at a time. Only the first {MAX_BATCH_SIZE} will be processed."
                 )
-            else:
-                st.success(f"{len(resume_files)} resume(s) uploaded")
 
         st.write("")
-        _, btn_col, _ = st.columns([1, 2, 1])
-        with btn_col:
-            screen_clicked = st.button("Screen Candidates", use_container_width=True)
+        screen_clicked = st.button("Screen Candidates", use_container_width=True)
 
     if screen_clicked:
         if not jd_text.strip() or len(jd_text.strip()) < 50:
@@ -430,7 +531,6 @@ def render_recruiter_mode():
 
         progress_bar.empty()
         status_text.empty()
-        st.success(f"Screening complete — {len(resume_files[:MAX_BATCH_SIZE])} resume(s) processed.")
 
         st.session_state["batch_results"] = batch_results
         st.session_state["recruiter_jd_text"] = jd_text
@@ -450,22 +550,10 @@ def render_recruiter_mode():
 
     st.write("")
     with st.container(border=True):
-        card_title(f"Ranked Results — {len(valid_results)} screened, {len(errored_results)} failed")
+        card_title("Ranked Results")
 
-        table_data = [
-            {
-                "Rank": i,
-                "Candidate": r["filename"],
-                "Overall %": r["final_score"],
-                "Exact %": r["exact_score"],
-                "Semantic %": r["semantic_score"],
-                "Matched": r["matched_count"],
-                "Missing": r["missing_count"],
-            }
-            for i, r in enumerate(valid_results, 1)
-        ]
-        if table_data:
-            st.dataframe(pd.DataFrame(table_data), use_container_width=True, hide_index=True)
+        if valid_results:
+            render_ranked_list(valid_results)
         else:
             st.warning("No resumes could be successfully processed.")
 
@@ -477,47 +565,82 @@ def render_recruiter_mode():
     if valid_results:
         st.write("")
         with st.container(border=True):
-            card_title("Top 5 Most Commonly Missing Skills")
-            agg = aggregate_missing_skills(valid_results, top_n=5)
-            if agg:
-                for skill, count in agg:
-                    st.write(f"- **{skill}** — missing in {count}/{len(valid_results)} candidates")
-                st.caption(
-                    "If a skill is missing across most candidates, consider whether the JD "
-                    "requirement is realistic for your talent pool."
-                )
-            else:
-                st.info("No common missing skills detected — candidates broadly cover the JD requirements.")
-
-        st.write("")
-        with st.container(border=True):
             card_title("Candidate Details")
 
             options = [f"#{i} — {r['filename']} ({r['final_score']}%)" for i, r in enumerate(valid_results, 1)]
-            selected = st.selectbox("Choose a candidate", options, label_visibility="collapsed")
+            selected = st.selectbox("Choose a candidate", options, label_visibility="collapsed", key="recruiter_candidate_select")
             r = valid_results[options.index(selected)]
 
-            m1, m2, m3 = st.columns(3)
-            m1.metric("Overall", f"{r['final_score']}%")
-            m2.metric("Exact", f"{r['exact_score']}%")
-            m3.metric("Semantic", f"{r['semantic_score']}%")
-
             st.write("")
-            d1, d2, d3 = st.columns(3)
-            with d1:
-                st.markdown("**Matched**")
-                st.caption(", ".join(r["matching_skills"]) or "None")
-            with d2:
-                st.markdown("**Missing**")
-                st.caption(", ".join(r["missing_skills"]) or "None")
-            with d3:
-                st.markdown("**Extra**")
-                st.caption(", ".join(r["extra_skills"]) or "None")
+            col_left, col_right = st.columns(2, gap="large")
+
+            with col_left:
+                card_title("Skill Breakdown")
+                tab1, tab2, tab3 = st.tabs(["Matched", "Missing", "Extra"])
+
+                with tab1:
+                    if r["matching_skills"]:
+                        render_skill_pills(r["matching_skills"], PILL_GREEN_BG, PILL_GREEN_TEXT)
+                        st.caption(f"{r['matched_count']} JD skills found in candidate's resume.")
+                    else:
+                        st.warning("No skill overlaps detected.")
+
+                with tab2:
+                    if r["missing_skills"]:
+                        render_skill_pills(r["missing_skills"], PILL_RED_BG, PILL_RED_TEXT)
+                        st.caption(f"{r['missing_count']} skills required by the JD but missing in candidate's resume.")
+                    else:
+                        st.success("Candidate has all skills mentioned in the job description!")
+
+                with tab3:
+                    if r["extra_skills"]:
+                        render_skill_pills(r["extra_skills"], PILL_BLUE_BG, PILL_BLUE_TEXT)
+                        st.caption(f"{len(r['extra_skills'])} extra skills found beyond what the JD requires.")
+                    else:
+                        st.info("No extra skills beyond the JD requirements detected.")
+
+            with col_right:
+                card_title("Match Score")
+                chart_col, legend_col = st.columns([2.2, 1], gap="small")
+
+                with chart_col:
+                    st.plotly_chart(
+                        plot_score_comparison(
+                            r["final_score"], r["exact_score"], r["semantic_score"]
+                        ),
+                        use_container_width=True,
+                        config={"displayModeBar": False},
+                        key=f"candidate_chart_{options.index(selected)}",
+                    )
+
+                with legend_col:
+                    st.markdown(
+                        f"""
+                        <div style="display:flex; flex-direction:column; justify-content:center; height:240px; gap:1.4rem;">
+                            <div style="text-align:center;">
+                                <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(r['final_score'])};margin:0 auto 4px;"></div>
+                                <div style="font-size:0.72rem;color:{TEXT_MUTED};">Overall</div>
+                                <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{r['final_score']}%</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(r['exact_score'])};margin:0 auto 4px;"></div>
+                                <div style="font-size:0.72rem;color:{TEXT_MUTED};">Exact</div>
+                                <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{r['exact_score']}%</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:9px;height:9px;border-radius:50%;background:{get_score_color(r['semantic_score'])};margin:0 auto 4px;"></div>
+                                <div style="font-size:0.72rem;color:{TEXT_MUTED};">Semantic</div>
+                                <div style="font-weight:700;font-size:0.9rem;color:{TEXT};">{r['semantic_score']}%</div>
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
         st.write("")
         with st.container(border=True):
             card_title("AI Hiring Insights (Top 5 Candidates)")
-            if st.button("Generate AI Explanation for Top 5"):
+            if st.button("Generate AI Explanation"):
                 if "GROQ_API_KEY" in st.secrets:
                     api_key = st.secrets["GROQ_API_KEY"]
                     for r in valid_results[:5]:
@@ -549,12 +672,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-tab_seeker, tab_recruiter = st.tabs(["Job Seeker", "Recruiter · Batch Screening"])
+mode = st.segmented_control(
+    "Mode",
+    ["Job Seeker", "Recruiter · Batch Screening"],
+    default="Job Seeker",
+    label_visibility="collapsed",
+) or "Job Seeker"
 
-with tab_seeker:
+if mode == "Job Seeker":
     render_job_seeker_mode()
-
-with tab_recruiter:
+else:
     render_recruiter_mode()
 
 st.write("")

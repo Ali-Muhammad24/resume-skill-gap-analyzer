@@ -14,7 +14,7 @@ SkillSync AI offers two modes:
 
 ### 🏢 Recruiter Mode
 - Upload up to **25 resumes** against a single job description.
-- Receive ranked candidates, aggregate skill-gap analysis, AI hiring summaries, and a downloadable PDF report.
+- Receive ranked candidates, AI hiring summaries, and a downloadable PDF report.
 
 Both modes use the same hybrid scoring engine for consistent evaluation.
 
@@ -27,7 +27,6 @@ Both modes use the same hybrid scoring engine for consistent evaluation.
 - 🤖 **Fine-Tuned Cross-Encoder**, hosted on Hugging Face Hub, with automatic fallback to `cross-encoder/stsb-distilroberta-base`.
 - 📊 **Hybrid Scoring:** 50% Exact Skill Match + 50% Semantic Similarity.
 - 📁 **Batch Resume Screening** with candidate ranking and progress tracking.
-- 📈 **Aggregate Skill Gap Analysis** across all candidates.
 - 🧠 **Groq Llama 3.3 70B** for career recommendations and recruiter summaries.
 - 📑 **PDF Screening Report** generation.
 - 📉 **Interactive Plotly Dashboard** with gauges and skill breakdowns.
@@ -108,9 +107,8 @@ streamlit run app.py
 
 1. Upload a job description and multiple resumes.
 2. Rank candidates using the hybrid scoring engine.
-3. Identify common skill gaps.
-4. Generate AI hiring summaries.
-5. Export a PDF screening report.
+3. Generate AI hiring summaries.
+4. Export a PDF screening report.
 
 ---
 

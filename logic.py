@@ -146,7 +146,8 @@ def get_ai_recommendations(resume_text, jd_text, api_key):
         3. Any domain knowledge gaps you notice
         4. ATS keyword improvements
 
-        Format: Clean bullet points without emojis. Be specific, not generic.
+        Format: Clean bullet points with heading without emojis. The heading size should be as same as 
+        the other text size but the weight of the heading should be bold. Be specific, not generic.
         """
 
         response = client.chat.completions.create(
