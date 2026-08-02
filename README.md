@@ -63,7 +63,7 @@ Both modes use the same hybrid scoring engine for consistent evaluation.
 ### Clone the repository
 
 ```bash
-git clone https://github.com/Ali-Muhammad24/resume-skill-gap-analyzer.git
+git clone https://github.com/Ali-Muhammad24/skillsync-ai.git
 cd skillsync-ai
 ```
 
