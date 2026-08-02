@@ -1,6 +1,10 @@
 # 🧠 SkillSync AI
 
-An AI-powered Streamlit application that matches resumes against job descriptions using a hybrid approach combining deterministic skill matching, a fine-tuned Cross-Encoder, and Groq's **Llama 3.3 70B** to generate actionable insights for both job seekers and recruiters.
+An AI-powered Streamlit application that matches resumes against job descriptions using a hybrid approach combining deterministic skill matching, a fine-tuned Cross-Encoder, and Groq's Llama 3.3 70B.
+
+## 🚀 Live Demo
+
+**Try it here:** https://skillsync-ai-demo.streamlit.app
 
 ---
 
