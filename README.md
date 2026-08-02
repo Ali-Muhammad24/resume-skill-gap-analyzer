@@ -132,4 +132,4 @@ streamlit run app.py
 
 The fine-tuned Cross-Encoder used in production is publicly available on Hugging Face Hub:
 
-**alimuhammad24/resume-jd-cross-encoder**
+https://huggingface.co/alimuhammad24/resume-jd-cross-encoder
