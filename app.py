@@ -13,6 +13,7 @@ from logic import (
     aggregate_missing_skills,
     generate_recruiter_report,
     MAX_BATCH_SIZE,
+    AI_UNAVAILABLE_MSG,
 )
 
 # Page Configuration
@@ -476,7 +477,7 @@ def render_job_seeker_mode():
                 ai_advice = get_ai_recommendations(resume_text, job_description, api_key)
                 st.markdown(ai_advice)
         else:
-            st.warning("API key missing. Add GROQ_API_KEY to your secrets.toml to enable this feature.")
+            st.warning(AI_UNAVAILABLE_MSG)
 
 # Recruiter Mode
 def render_recruiter_mode():
@@ -649,7 +650,7 @@ def render_recruiter_mode():
                         with st.expander(f"AI Insight — {r['filename']}"):
                             st.markdown(advice)
                 else:
-                    st.warning("API key missing. Add GROQ_API_KEY to your secrets.toml to enable this feature.")
+                    st.warning(AI_UNAVAILABLE_MSG)
 
             st.write("")
             pdf_bytes = generate_recruiter_report(valid_results, jd_text_saved)

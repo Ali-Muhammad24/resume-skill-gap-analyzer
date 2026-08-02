@@ -23,6 +23,9 @@ from fpdf.enums import XPos, YPos
 # Skills DB from skills.py
 from skills import SKILL_TAXONOMY
 
+# Single fallback message shown for any AI/API failure (quota, network, auth, etc.)
+AI_UNAVAILABLE_MSG = "AI recommendations are currently unavailable."
+
 # Load fine-tuned Cross-Encoder from Hugging Face with fallback to the pre-trained base model
 HF_MODEL_REPO = "alimuhammad24/resume-jd-cross-encoder"
 FALLBACK_CROSS_ENCODER = "cross-encoder/stsb-distilroberta-base"
@@ -156,7 +159,7 @@ def get_ai_recommendations(resume_text, jd_text, api_key):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return AI_UNAVAILABLE_MSG
 
 
 # ---------- Recruiter Mode ----------
@@ -236,7 +239,7 @@ def get_recruiter_summary(resume_text, jd_text, api_key):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return AI_UNAVAILABLE_MSG
 
 # PDF Report Export for Recruiter
 def _pdf_safe(text, max_word_len=35):
